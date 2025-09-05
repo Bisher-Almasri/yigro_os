@@ -11,10 +11,12 @@ use yigro_os::println;
 pub extern "C" fn _start() -> ! {
     println!("skib{}", "idi");
 
+    yigro_os::init();
+
     #[cfg(test)]
     test_main();
 
-    loop {}
+    yigro_os::hlt_loop();
 }
 
 // since we are using nostd we need ot make our wn panic handler
@@ -23,7 +25,7 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    yigro_os::hlt_loop();
 }
 
 #[cfg(test)]
