@@ -5,12 +5,22 @@
 #![feature(custom_test_frameworks)]
 #![test_runner(crate::test_runner)]
 
+#[cfg(test)]
+use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 
-pub mod serial;
-pub mod vga_buf;
-pub mod interrupts;
+extern crate alloc;
+
+#[cfg(test)]
+entry_point!(test_kernel_main);
+
+pub mod allocator;
 pub mod gdt;
+pub mod interrupts;
+pub mod memory;
+pub mod serial;
+pub mod task;
+pub mod vga_buf;
 
 pub trait Testable {
     fn run(&self) -> ();
@@ -23,7 +33,10 @@ pub fn init() {
     x86_64::instructions::interrupts::enable();
 }
 
-impl<T> Testable for T where T: Fn() {
+impl<T> Testable for T
+where
+    T: Fn(),
+{
     fn run(&self) {
         serial_print!("{}...\t", core::any::type_name::<T>());
         self();
@@ -69,8 +82,7 @@ pub fn hlt_loop() -> ! {
 }
 
 #[cfg(test)]
-#[unsafe(no_mangle)]
-pub extern "C" fn _start() -> ! {
+fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
     init();
     test_main();
     hlt_loop();
