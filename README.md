@@ -2,6 +2,15 @@
 
 Yigro os is a x86_64 bit kernel/OS which supports a ps2 keyboard. it is written in rust.
 
+## Why make this
+
+I did this since i really wanted to make a new [OS](https://github.con/bisher-almasri/bigroos). So i decided to do it in rust. my main goal wsa to have a ps2 keyboard support which i have acomplished. so th next step are:
+
+- [ ] Shell
+- [ ] Fs
+- [ ] Mouse support
+- [ ] Beyond VGA,
+
 # How to run
 
 You will need:
